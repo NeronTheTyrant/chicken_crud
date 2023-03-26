@@ -6,6 +6,16 @@ Made with this boilerplate: https://github.com/LandazuriPaul/nest-react
 
 Features a super basic frontend for demonstration purposes.
 
+Client / React files are located in:
+```
+packages/client
+```
+
+Server / NestJS files are located in:
+```
+packages/server
+```
+
 ## To use:
 
 In the root directory, install via yarn
