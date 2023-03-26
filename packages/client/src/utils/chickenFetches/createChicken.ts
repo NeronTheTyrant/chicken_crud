@@ -2,7 +2,7 @@ import { Chicken } from "@nest-react/domain";
 import { API_URL } from "~/config";
 import { Logger } from "../logger";
 
-export async function createChicken(): Promise<Chicken | undefined> {
+export async function createChicken(id?: number): Promise<Chicken | undefined> {
     try {
         const randomInfoRes = await fetch(`https://randomuser.me/api/`);
         const randomData = await randomInfoRes.json()
@@ -11,7 +11,7 @@ export async function createChicken(): Promise<Chicken | undefined> {
         const res = await fetch(`${API_URL}/chicken`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: name, birthday: dob, weight: Math.floor(Math.random() * 120) })
+            body: JSON.stringify({ name: name, birthday: dob, weight: Math.floor(Math.random() * 120), coopId: id })
         })
         const data = await res.json();
         return data;

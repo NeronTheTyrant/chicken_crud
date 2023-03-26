@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateCoopDto } from './dto/create-coop.dto';
 import { UpdateCoopDto } from './dto/update-coop.dto';
 
 @Injectable()
 export class CoopService {
+  constructor(private readonly prisma: PrismaService) { }
+
   create(createCoopDto: CreateCoopDto) {
-    return 'This action adds a new coop';
+    return this.prisma.coop.create({ data: createCoopDto, include: { chickens: true } });
   }
 
   findAll() {
-    return `This action returns all coop`;
+    return this.prisma.coop.findMany({ include: { chickens: true } });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} coop`;
+    return this.prisma.coop.findUnique({ where: { id }, include: { chickens: true } });
   }
 
   update(id: number, updateCoopDto: UpdateCoopDto) {
-    return `This action updates a #${id} coop`;
+    return this.prisma.coop.update({ where: { id }, data: updateCoopDto, include: { chickens: true } });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} coop`;
+    return this.prisma.coop.delete({ where: { id } });
   }
 }
