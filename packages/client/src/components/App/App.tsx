@@ -7,6 +7,7 @@ import { Logger, checkServerVersion } from '~/utils';
 
 export const App: FC<unknown> = () => {
   const [response, setResponse] = useState<string>('NO SERVER RESPONSE');
+  const [chicken, setChicken] = useState<string>("no chicken :(");
 
   useEffect(() => {
     async function fetchResponse(): Promise<void> {
@@ -19,7 +20,22 @@ export const App: FC<unknown> = () => {
       }
     }
 
+    async function chickenMake() {
+      try {
+        const res = await fetch(`${API_URL}/chicken`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: "Buck", birthday: `${Date.now()}`, weight: '60' })
+        })
+        const data = await res.text();
+        setChicken(data);
+      } catch (err) {
+        Logger.error(err);
+      }
+    }
+
     fetchResponse();
+    chickenMake();
   }, []);
 
   useEffect(() => {
@@ -42,6 +58,12 @@ export const App: FC<unknown> = () => {
         <br />
         <br />
         {response}
+      </div>
+      <div>
+        And here we get chicken?
+        <br />
+        <br />
+        {chicken}
       </div>
     </>
   );

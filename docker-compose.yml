@@ -1,20 +1,83 @@
-# This docker-compose is for local development / test only
+# # This docker-compose is for local development / test only
 
 version: '3.6'
 
 services:
   # Server
   server:
-    image: docker.pkg.github.com/landazuripaul/nest-react/nest-react-server:latest
+    build:
+      context: .
+      dockerfile: ./packages/server/Dockerfile-dev
+    image: nest-react-server
+    container_name: nest-react-server
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
-      - ./packages/server/env/.env.local:/usr/src/nest-react/packages/server/env/.env.local
+      - ./packages/server:/usr/src/nest-react/packages/server
     ports:
       - '4000:4000'
     environment:
       - NODE_ENV=local
+      - DATABASE_URL=${DB_URL}
+    networks:
+      - chickencrud_network
 
   # Client
   client:
-    image: docker.pkg.github.com/landazuripaul/nest-react/nest-react-client:latest
+    build: 
+      context: .
+      dockerfile: ./packages/client/Dockerfile-dev
+    image: nest-react-client
+    container_name: nest-react-client
+    restart: always
+    volumes:
+      - ./packages/client:/usr/src/nest-react/packages/client
     ports:
-      - '8000:80'
+      - '8000:8000'
+    networks:
+      - chickencrud_network
+  
+  # Database
+  db:
+      image: postgres:15
+      container_name: postgres
+      restart: always
+      ports:
+        - 5432:5432
+      environment:
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PW}
+        - POSTGRES_DB=${DB_NAME}
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+      networks:
+        - chickencrud_network
+
+networks:
+  chickencrud_network:
+
+# This docker-compose is for local development / test only
+
+# version: '3.6'
+
+# services:
+#   # Server
+#   server:
+#     image: docker.pkg.github.com/landazuripaul/nest-react/nest-react-server:latest
+#     volumes:
+#       - ./packages/server/env/.env.local:/usr/src/nest-react/packages/server/env/.env.local
+#     ports:
+#       - '4000:4000'
+#     environment:
+#       - NODE_ENV=local
+
+#   # Client
+#   client:
+#     image: docker.pkg.github.com/landazuripaul/nest-react/nest-react-client:latest
+#     ports:
+      # - '8000:80'

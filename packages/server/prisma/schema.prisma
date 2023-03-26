@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model chicken {
+  name      String @unique
+  birthday  DateTime
+  weight    Int
+  steps     Int @default(0)
+  isRunning Boolean @default(false)
+  coop      coop?     @relation(fields: [coopName], references: [name], onDelete: Cascade)
+  coopName  String
+}
+
+model coop {
+  name      String @unique
+  chickens  chicken[]
+}
