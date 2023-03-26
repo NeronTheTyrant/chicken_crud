@@ -1,26 +1,26 @@
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsDate, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateChickenDto {
     @IsNotEmpty()
     @IsString()
     name: string;
 
-    @IsDate()
+    @IsDateString()
     birthday: Date;
 
     @IsNotEmpty()
-    @IsString()
+    @IsNumber()
     weight: number;
 
     @IsNumber()
     @IsOptional()
-    steps: number;
+    steps?: number;
 
     @IsBoolean()
     @IsOptional()
-    isRunning: boolean
+    isRunning?: boolean
 
-    @IsString()
+    @IsNumber()
     @IsOptional()
-    coopName: string
+    coopId?: number
 }
